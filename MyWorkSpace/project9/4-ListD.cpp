@@ -158,3 +158,15 @@ doubleNode* ListD::FindPosition(int pos) {
 
     return cur;
 }
+void ListD::Sort() {
+    for (doubleNode* i = head->next; i != tail; i = i->next) {
+        for (doubleNode* j = i->next; j != tail; j = j->next) {
+            if (i->item > j->item) {
+                // Swap the values
+                int temp = i->item;
+                i->item = j->item;
+                j->item = temp;
+            }
+        }
+    }
+}

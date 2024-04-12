@@ -1,8 +1,8 @@
 /*
-Name: Paul De Palma
+Name: anthony hidalgo 
 Class: CPSC 122, Section 1
-Date Submitted: March 27, 2024 
-Assignment: N/A 
+Date Submitted: april 12, 2024 
+Assignment: project 9
 Description: header file for a doubly linked list with dummy nodes at head and tail
 */
 

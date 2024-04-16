@@ -1,9 +1,9 @@
 /*
-Name: anthony hidalgo 
+Name: McKinley Martsolf and Anthony Hidalgo
 Class: CPSC 122, Section 1
-Date Submitted: april 12, 2024 
-Assignment: project 9
-Description: header file for a doubly linked list with dummy nodes at head and tail
+Date Submitted: April 11, 2024 
+Assignment: 9
+Description: header file for a doubly linked list with dummy notes at head and tail
 */
 
 #ifndef LIST_H
@@ -11,13 +11,15 @@ Description: header file for a doubly linked list with dummy nodes at head and t
 
 typedef int itemType;
 
+template <typename T>
 struct doubleNode
 {
- doubleNode* prev;
- itemType item;
- doubleNode* next;
+ doubleNode<T>* prev;
+ T item;
+ doubleNode<T>* next;
 };
 
+template <typename T>
 class ListD
 {
  public:
@@ -35,7 +37,7 @@ class ListD
    post: The current object is an exact and deep copy of what lst points
          to.
    */
-   ListD(ListD* lst);
+   ListD(ListD<T>* lst);
 
    ~ListD();
 
@@ -44,7 +46,7 @@ class ListD
         first real (non-dummy) node is at position 1. 
    post: new node is inserted at postion pos. 
    */
-   void Insert(itemType item, int pos);   
+   void Insert(T item, int pos);   
 
    /*
    pre: ListD exists, pos is in the range [1..length].
@@ -57,7 +59,7 @@ class ListD
    post: All nodes containing item have been deleted.  Returns the
          number of nodes that have been deleted. 
    */
-   int DeleteAll(itemType item);   
+   int DeleteAll(T item);   
 
    /*
    pre: ListD exists.
@@ -86,12 +88,10 @@ class ListD
    Comment: Used in conjunction with functions that insert and delete   
    pre:  ListD exists, pos is the position where the new node is to be
          inserted. pos is in the range [1..length+1].
-   Post: Returns insertion point A (see the implemention of insert), the node 
-         just before the insertion point. So, n the case of insertion, 
-   if you wanted your new node to be in position 3, 
-         A would point to the node in position 2.
+   Post: Returns insertion point A (see the implemention of insert)
+         used in inserting a node in a list 
    */
-   doubleNode* FindPosition(int pos);
+   doubleNode<T>* FindPosition(int pos);
 
    /*
    Comment: Used in constructors to prevent duplicate code   
@@ -101,8 +101,8 @@ class ListD
    void InitializeVars(); 
 
    int length;         //length of the list
-   doubleNode* head;   //points to the first dummy node 
-   doubleNode* tail;   //points to the last dummy node  
+   doubleNode<T>* head;   //points to the first dummy node 
+   doubleNode<T>* tail;   //points to the last dummy node  
 };
 #endif
 

@@ -2,10 +2,14 @@
 using namespace std;
 
 #include "4-ListD.h"
+#include "4-ListD.cpp"
 
 //All tests are controlled by a dedicated function
+//template <typename T>
 void TestInsert();
+//template <typename T>
 void TestCopyConstructor();
+
 
 int main()
 {
@@ -14,11 +18,11 @@ int main()
 }
 
 
-
+template <typename T>
 void TestInsert()
 {
 
- ListD* lst = new ListD;
+ ListD<int>* lst = new ListD<int>;
  for (int i = 1; i <= 5; i++)
   lst->Insert(i,i);
 
@@ -47,30 +51,47 @@ void TestInsert()
  //delete lst;
 }
 
+
 void TestCopyConstructor()
 {
- ListD* lst1 = new ListD;
- for (int i = 1; i <= 3; i++)
+ ListD<int>* lst1 = new ListD<int>;
+ for (int i = 1; i <= 4; i++)
   lst1->Insert(i,i);
 
- ListD* lst2(lst1);
+ ListD<int>* lst2(lst1);
 
  cout << "Test Copy Constructor" << endl; 
  cout << "Test passed if copy is indentical to initial list" << endl; 
  cout << "Traverse inital list" << endl;
  lst1->PrintForward();
  cout << endl;
+
  cout << "Traverse copy" << endl;
  lst2->PrintForward();
  cout << endl;
- cout << "Traverse backwards" << endl;
+
+ cout << "Traverse list Backwards" << endl;
  lst2->PrintBackward();
  cout << endl;
- cout << "Delete" << endl;
- lst2->Delete(1);
-  cout << " list after deleting item"<< endl;
- lst2-> PrintForward();
+ cout << "Delete a node that contains the number which is imputed" << endl;
+
+ // lst2->Delete(4);
  cout << endl;
+ cout << "New list after Delete" << endl;
+ lst2->PrintForward();
+ cout << endl;
+
+ cout << "The item value of each node, from head to tail, is displayed on the screen, excluding the dummy nodes." << endl;
+ //lst2->DeleteAll(3);
+ lst2->PrintForward();
+ cout << endl;
+
+cout << "Sort the function from greatest to least (Stack)" << endl;
+lst2->PrintBackward();
+lst2->Sort();
+cout << endl;
+
+
  //delete lst1;
  //delete lst2;
 }

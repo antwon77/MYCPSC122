@@ -19,14 +19,14 @@ private:
     void MakeValueTbl();
     void Parse();
     results* AddToValueTbl(char* expression);
-    int FindLast(int cur);
     bool CheckParens();
-    void InFixToPostFix();
-    void ResetStack(Stack* stk);
+    int CalculateTotal(); // Declaration of the CalculateTotal() method
+    int FindLast(int cur);
 
-    char* inFix;
-    int* valueTbl;
+    char*  inFix;
+    int*  valueTbl;
     int valueIdx;
+    results* nums; // Added declaration of nums as a member variable
     Stack* stk;
 };
 

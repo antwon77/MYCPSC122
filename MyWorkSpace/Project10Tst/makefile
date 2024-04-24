@@ -1,19 +1,20 @@
-#to run: make
-#to elminate .o file: make clean
+# to run: make
+# to eliminate .o files: make clean
+
 calc: calcTst.o calc.o stack2.o list.o
-  g++ -o calc calcTst.o calc.o stack2.o list.o
+	g++ -o calc calcTst.o calc.o stack2.o list.o
 
 calcTst.o: calcTst.cpp
-  g++ -c calcTst.cpp 
+	g++ -c calcTst.cpp 
 
 calc.o: calc.cpp
-  g++ -c calc.cpp 
+	g++ -c calc.cpp 
 
-stack1.o: stack1.cpp
-  g++ -c stack2.cpp 
+stack2.o: stack2.cpp
+	g++ -c stack2.cpp 
 
-list1.o: list.cpp
-  g++ -c list.cpp 
+list.o: list.cpp
+	g++ -c list.cpp 
 
-clean :
-  rm *.o
+clean:
+	rm -f *.o calc

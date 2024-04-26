@@ -1,160 +1,109 @@
 #include <iostream>
-#include "calc.h"
-#include <cstring>
-#include <cstdlib>
-
 using namespace std;
 
-Calc::Calc(char* argvIn) {
-    inFix = new char[strlen(argvIn) + 1];
-    strcpy(inFix, argvIn);
-    MakeValueTbl();
-    if (!CheckTokens()) {
-        cout << "Error: Invalid tokens." << endl;
-        exit(EXIT_FAILURE);
-    }
-    Parse();
-    if (!CheckParens()) {
-        cout << "Error: Unbalanced parentheses." << endl;
-        exit(EXIT_FAILURE);
-    }
-    InFixToPostFix();
-    stk = new Stack;
+#include "calc.h"
+#include <cstring>
+#include <cctype>
+
+Calc::Calc(char *argvIn) {
+  stk = new Stack;
+  // Checking for valid tokens in the expression
+  if (!CheckTokens(argvIn)) {
+    cout << "Error: Invalid expression" << endl;
+  }
+  // Checking for balanced parentheses
+  if (!CheckParens(argvIn)) {
+    cout << "Error: Unbalanced parentheses" << endl;
+  }
+  // Creating a value table
+  MakeValueTbl();
+  // Parsing the expression
+  Parse(argvIn);
 }
 
 Calc::~Calc() {
-    delete[] inFix;
-    delete[] postFix;
-    delete[] valueTbl;
-    ResetStack(stk);
-    delete stk;
+  delete stk;
+  delete valueTbl;
+  delete inFix;
 }
 
-void Calc::DisplayInFix() {
-    cout << "Infix Expression: " << inFix << endl;
-}
-
-void Calc::DisplayPostFix() {
-    cout << "Postfix Expression: " << postFix << endl;
-}
-
-int Calc::Evaluate() {
-    stk->Reset();
-    int i = 0;
-    while (postFix[i] != '\0') {
-        if (isdigit(postFix[i])) {
-            stk->Push(valueTbl[postFix[i] - 'A']);
-        } else {
-            int operand2 = stk->Pop();
-            int operand1 = stk->Pop();
-            switch (postFix[i]) {
-                case '+':
-                    stk->Push(operand1 + operand2);
-                    break;
-                case '-':
-                    stk->Push(operand1 - operand2);
-                    break;
-                case '*':
-                    stk->Push(operand1 * operand2);
-                    break;
-                case '/':
-                    stk->Push(operand1 / operand2);
-                    break;
-            }
-        }
-        i++;
+bool Calc::CheckTokens(char* exp) { 
+  int count = 0;
+  // Define the allowed characters in the expression
+  char allowed[] = " ()*+-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for (int i = 0; i < strlen(exp); i++){
+    for (int j = 0; j < strlen(allowed); j++){
+      if(exp[i] == allowed[j]){
+        count++;
+      }
     }
-    return stk->Pop();
-}
-
-bool Calc::CheckTokens() {
-    int i = 0;
-    while (inFix[i] != '\0') {
-        if (!(isalpha(inFix[i]) || isdigit(inFix[i]) || strchr("+-*/()", inFix[i]))) {
-            return false;
-        }
-        i++;
-    }
+  }
+  // If the count matches the length of the expression, all characters are valid
+  if(count == strlen(exp)){
     return true;
+  }
+  return false; 
 }
 
 void Calc::MakeValueTbl() {
-    valueTbl = new int[26]();
-    valueIdx = 0;
+  // Creating an array to store values for variables A-Z
+  valueTbl = new int[26];
+  // Initialize all values to 0
+  for (int i = 0; i < 26; i++)
+    valueTbl[i] = 0;
 }
 
-void Calc::Parse() {
-    int i = 0;
-    while (inFix[i] != '\0') {
-        if (isalpha(inFix[i])) {
-            inFix[i] = 'A' + valueIdx;
-            int lastDigit = FindLast(i);
-            char* numString = new char[lastDigit - i + 2];
-            strncpy(numString, inFix + i, lastDigit - i + 1);
-            numString[lastDigit - i + 1] = '\0';
-            valueTbl[valueIdx++] = atoi(numString);
-            delete[] numString;
-            i = lastDigit;
-        }
+void Calc::Parse(char* exp) {
+  int inFixCt = 0;
+  // Allocate memory for the infix expression
+  inFix = new char[strlen(exp)];
+
+  for(int i = 0; i < strlen(exp); i++) {
+    // If the character is a digit, it might be part of a number
+    if(isdigit(exp[i]) == true) {
+      // Extract the number from the expression
+      int num = atoi(exp + i); 
+      // Store the value in the value table
+      valueTbl[valueIdx] = num;
+      // Increment value index
+      valueIdx++;
+      // Assign a variable name to the value in the infix expression
+      inFix[inFixCt++] = 'A' + valueIdx - 1;
+      cout << inFix[inFixCt - 1] << ": " << num << endl; 
+      // Skip to the end of the number
+      while(isdigit(exp[i + 1]) == true) 
         i++;
+    } else {
+      // Copy non-digit characters directly to the infix expression
+      inFix[inFixCt++] = exp[i];
     }
+  }
 }
 
-int Calc::FindLast(int cur) {
-    while (isdigit(inFix[cur])) {
-        cur++;
+bool Calc::CheckParens(char *exp) {
+  int i = 0;
+  // Loop through the expression to check parentheses balance
+  while (exp[i] != '\0') {
+    if (exp[i] == '(')
+      stk->Push(exp[i]);
+    if (exp[i] == ')') {
+      if (stk->IsEmpty())
+        return false;
+      stk->Pop();
     }
-    return cur - 1;
+    i++;
+  }
+  // If stack is empty after traversing the expression, parentheses are balanced
+  return (stk->IsEmpty());
 }
 
-bool Calc::CheckParens() {
-    int count = 0;
-    int i = 0;
-    while (inFix[i] != '\0') {
-        if (inFix[i] == '(') {
-            count++;
-        } else if (inFix[i] == ')') {
-            count--;
-        }
-        i++;
+void Calc::DisplayInFix() {
+  int i = 0;
+  cout << "Infix: ";
+  // Display the infix expression
+  while (inFix[i] != '\0')
+    {
+    cout << inFix[i++];
     }
-    return count == 0;
-}
-
-void Calc::InFixToPostFix() {
-    postFix = new char[strlen(inFix) + 1];
-    int postFixIdx = 0;
-    Stack operators;
-    int i = 0;
-    while (inFix[i] != '\0') {
-        if (isdigit(inFix[i])) {
-            postFix[postFixIdx++] = inFix[i];
-        } else if (isalpha(inFix[i])) {
-            postFix[postFixIdx++] = inFix[i];
-        } else if (inFix[i] == '(') {
-            operators.Push(inFix[i]);
-        } else if (inFix[i] == ')') {
-            while (!operators.IsEmpty() && operators.Top() != '(') {
-                postFix[postFixIdx++] = operators.Pop();
-            }
-            operators.Pop();
-        } else {
-            while (!operators.IsEmpty() && operators.Top() != '(' && 
-                   ((inFix[i] == '*' || inFix[i] == '/') && (operators.Top() == '*' || operators.Top() == '/'))) {
-                postFix[postFixIdx++] = operators.Pop();
-            }
-            operators.Push(inFix[i]);
-        }
-        i++;
-    }
-    while (!operators.IsEmpty()) {
-        postFix[postFixIdx++] = operators.Pop();
-    }
-    postFix[postFixIdx] = '\0';
-}
-
-void Calc::ResetStack(Stack* stk) {
-    while (!stk->IsEmpty()) {
-        stk->Pop();
-    }
+  cout << endl;
 }

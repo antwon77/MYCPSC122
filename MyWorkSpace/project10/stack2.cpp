@@ -1,24 +1,27 @@
-#ifndef STACK_H
-#define STACK_H
+//Stack implemented using List and inheritance
+#include <iostream>
+using namespace std;
 
-#include "list.h"
+#include "stack2.h"
 
-class Stack : public List
+Stack::Stack() : List()
 {
-public:
-    // Constructor: Initializes the stack
-    Stack();
+}
 
-    // Pushes an item onto the top of the stack
-    void Push(itemType newItem);
+void Stack::Push(itemType newItem)
+{ 
+ PutItemH(newItem);
+}
 
-    // Removes the top item from the stack
-    void Pop();
+void Stack::Pop()
+{
+ DeleteItemH();
+}
 
-    // Returns the top item from the stack without removing it
-    itemType Peek();
-};
+itemType Stack::Peek()
+{
+ return GetItemH(); 
+}
 
-#endif
 
 

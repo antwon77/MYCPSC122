@@ -1,14 +1,14 @@
 //Stack implemented using a List and inheritance
 #ifndef STACK_H
 #define STACK_H
-
+ 
 #include "list.h"
 
 class Stack : public List
 {
  public:
    Stack();
-
+ 
    /*
    pre: an instance of stack exists
    post: newItem is at the top of the stack 

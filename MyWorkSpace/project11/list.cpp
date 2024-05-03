@@ -51,7 +51,7 @@ void List::DeleteItemH()
  delete cur;
  length--;
 }
-
+	
 void List::Print() const
 {
  node* cur = head;
